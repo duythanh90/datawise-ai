@@ -1,0 +1,6 @@
+{
+    "app_title": "Demostración de Flutter",
+    "home_screen_title": "Pantalla de inicio",
+    "increment_button": "Incrementar",
+    "counter_text": "Has presionado el botón esta cantidad de veces:"
+}
