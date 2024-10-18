@@ -1,9 +1,11 @@
+import 'package:datawiseai/features/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'features/home/home_screen.dart';
 import 'features/home/home_provider.dart';
 import 'localization/app_localizations.dart';
+import 'features/intro/intro_screen.dart';
 
 void main() {
   runApp(const DataWiseAIApp());
@@ -38,7 +40,12 @@ class DataWiseAIApp extends StatelessWidget {
           }
           return supportedLocales.first;
         },
-        home: const HomeScreen(),
+        initialRoute: '/intro',
+        routes: {
+          '/intro': (context) => const IntroScreen(), // Intro screen
+          '/login': (context) => const LoginScreen(), // Login/Register screen
+          '/home': (context) => const HomeScreen(), // Home screen after login
+        },
       ),
     );
   }
