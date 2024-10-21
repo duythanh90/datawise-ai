@@ -2,5 +2,12 @@
     "app_title": "Flutter Demo",
     "home_screen_title": "Home Screen",
     "increment_button": "Increment",
-    "counter_text": "You have pushed the button this many times:"
+    "counter_text": "You have pushed the button this many times:",
+    "login_title": "Login",
+    "username_label": "Username",
+    "username_hint": "Enter your username",
+    "password_label": "Password",
+    "password_hint": "Enter your password",
+    "login_button": "Login",
+    "register_button": "Register"
 }

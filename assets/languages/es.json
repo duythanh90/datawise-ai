@@ -2,5 +2,13 @@
     "app_title": "Demostración de Flutter",
     "home_screen_title": "Pantalla de inicio",
     "increment_button": "Incrementar",
-    "counter_text": "Has presionado el botón esta cantidad de veces:"
-}
+    "counter_text": "Has presionado el botón esta cantidad de veces:",
+    
+    "login_title": "Iniciar sesión",
+    "username_label": "Nombre de usuario",
+    "username_hint": "Ingresa tu nombre de usuario",
+    "password_label": "Contraseña",
+    "password_hint": "Ingresa tu contraseña",
+    "login_button": "Iniciar sesión",
+    "register_button": "Registrarse"
+  }
