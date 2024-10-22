@@ -1,13 +1,33 @@
-import 'package:datawiseai/features/login/login_screen.dart';
+import 'package:datawiseai/utils/logger.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-import 'features/home/home_screen.dart';
-import 'features/home/home_provider.dart';
-import 'localization/app_localizations.dart';
-import 'features/intro/intro_screen.dart';
+import 'package:datawiseai/features/login/login_screen.dart';
+import 'package:datawiseai/features/home/home_provider.dart';
+import 'package:datawiseai/features/home/home_screen.dart';
+import 'package:datawiseai/localization/app_localizations.dart';
+import 'package:datawiseai/features/intro/intro_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:datawiseai/firebase_options.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
-void main() {
+Future<void> main() async {
+  // Firebase initialization
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    if (user == null) {
+      Logger.debug('User is currently signed out!');
+    } else {
+      Logger.debug('User is signed in!');
+    }
+  });
+
+  // Run the app
   runApp(const DataWiseAIApp());
 }
 
@@ -23,9 +43,10 @@ class DataWiseAIApp extends StatelessWidget {
           Locale('en', ''), // English
           Locale('es', ''), // Spanish
         ],
-        title: 'Data Wise AI', // Updated title
+        title: 'Data Wise AI', //
         theme: ThemeData(
           primarySwatch: Colors.blue,
+          fontFamily: 'Montserrat', // Set Montserrat as the default font
         ),
         localizationsDelegates: const [
           AppLocalizations.delegate,
@@ -43,7 +64,7 @@ class DataWiseAIApp extends StatelessWidget {
         initialRoute: '/intro',
         routes: {
           '/intro': (context) => const IntroScreen(), // Intro screen
-          '/login': (context) => const LoginScreen(), // Login/Register screen
+          '/login': (context) => LoginScreen(), // Login/Register screen
           '/home': (context) => const HomeScreen(), // Home screen after login
         },
       ),

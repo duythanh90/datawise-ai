@@ -1,12 +1,62 @@
+import 'package:datawiseai/utils/logger.dart';
 import 'package:datawiseai/widgets/app_action_button.dart';
 import 'package:datawiseai/widgets/app_text_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../../widgets/app_title.dart'; // Import the AppTitle widget
 import '../../widgets/app_text_field.dart'; // Import the AppTextField widget
 import '../../localization/app_localizations.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  LoginScreen({super.key});
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
+
+  // Create login function
+  Future<User?> signInWithGoogle() async {
+    try {
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+      if (googleUser == null) {
+        // The user canceled the sign-in
+        Logger.debug('Google sign-in canceled');
+        return null;
+      }
+
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      // Create a new credential
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Sign in to Firebase with the Google credential
+      final UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
+
+      // This will return the current Firebase user (after Google authentication)
+      final User? firebaseUser = userCredential.user;
+
+      // Check if the Firebase user exists
+      if (firebaseUser != null) {
+        Logger.debug(
+            'Successfully signed in with Google. Firebase User: ${firebaseUser.displayName}');
+        return firebaseUser;
+      } else {
+        Logger.debug('Failed to sign in with Google');
+        return null;
+      }
+    } catch (e) {
+      Logger.error('Failed to sign in with Google: $e');
+      return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +134,7 @@ class LoginScreen extends StatelessWidget {
                   AppActionButton(
                     onPressed: () {
                       // Add login logic here
+                      signInWithGoogle();
                     },
                     textKey: 'login_button',
                     buttonHeight: 65,
@@ -94,9 +145,7 @@ class LoginScreen extends StatelessWidget {
                       height:
                           20), // Space between the last button and the screen bottom
                   AppTextButton(
-                    onPressed: () {
-                      // Add login logic here
-                    },
+                    onPressed: () {},
                     textKey: 'register_button',
                     textColor: Colors.black87,
                   ),
