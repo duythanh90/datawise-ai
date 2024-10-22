@@ -1,3 +1,4 @@
+import 'package:datawiseai/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppTextField extends StatelessWidget {
@@ -15,16 +16,16 @@ class AppTextField extends StatelessWidget {
     return TextField(
       obscureText: isPassword,
       style: const TextStyle(
-          fontSize: 20, color: Colors.black), // Updated font size to 20
+          fontSize: 18, color: Colors.black), // Updated font size to 20
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
         contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16, vertical: 20), // Adjusted for height
+            horizontal: 18, vertical: 12), // Adjusted for height
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(
-              color: Color(0xFF979797)), // Updated border color to #979797
+          borderSide:
+              BorderSide(color: AppColors.appTextFieldBorderColor, width: 1),
         ),
         hintText: hintTextKey,
       ),

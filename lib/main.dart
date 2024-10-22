@@ -1,6 +1,6 @@
+import 'package:datawiseai/utils/app_constants.dart';
 import 'package:datawiseai/utils/logger.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:datawiseai/features/login/login_screen.dart';
@@ -31,18 +31,30 @@ Future<void> main() async {
   runApp(const DataWiseAIApp());
 }
 
-class DataWiseAIApp extends StatelessWidget {
+class DataWiseAIApp extends StatefulWidget {
   const DataWiseAIApp({super.key});
+
+  @override
+  _DataWiseAIAppState createState() => _DataWiseAIAppState();
+}
+
+class _DataWiseAIAppState extends State<DataWiseAIApp> {
+  Locale _locale = const Locale('en');
+
+  // Function to change the locale
+  void _changeLanguage(Locale locale) {
+    setState(() {
+      _locale = Locale(locale.languageCode);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => HomeProvider(),
       child: MaterialApp(
-        supportedLocales: const [
-          Locale('en', ''), // English
-          Locale('es', ''), // Spanish
-        ],
+        locale: _locale, // This will be dynamically updated
+        supportedLocales: AppConstants.supportedLocales,
         title: 'Data Wise AI', //
         theme: ThemeData(
           primarySwatch: Colors.blue,
@@ -54,6 +66,7 @@ class DataWiseAIApp extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate,
         ],
         localeResolutionCallback: (locale, supportedLocales) {
+          // If locale is supported, use it, else fallback to the first one in supportedLocales
           for (var supportedLocale in supportedLocales) {
             if (supportedLocale.languageCode == locale?.languageCode) {
               return supportedLocale;
@@ -64,7 +77,10 @@ class DataWiseAIApp extends StatelessWidget {
         initialRoute: '/intro',
         routes: {
           '/intro': (context) => const IntroScreen(), // Intro screen
-          '/login': (context) => LoginScreen(), // Login/Register screen
+          '/login': (context) => LoginScreen(
+                onLanguageSelected:
+                    _changeLanguage, // Pass the change language function
+              ), // Login/Register screen
           '/home': (context) => const HomeScreen(), // Home screen after login
         },
       ),

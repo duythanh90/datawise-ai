@@ -7,11 +7,11 @@ class AppTextButton extends StatelessWidget {
   final Color? textColor; // Optional text color
 
   const AppTextButton({
-    Key? key,
+    super.key,
     required this.onPressed,
-    required this.textKey, // Localization key instead of direct text
-    this.textColor, // Allow optional text color
-  }) : super(key: key);
+    required this.textKey,
+    this.textColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class AppTextButton extends StatelessWidget {
     return TextButton(
       onPressed: onPressed,
       style: TextButton.styleFrom(
-        padding: EdgeInsets.zero, // Remove default padding
+        padding: const EdgeInsets.all(12), // Remove padding
         minimumSize: const Size(0, 0), // Remove minimum size constraints
         tapTargetSize:
             MaterialTapTargetSize.shrinkWrap, // Shrink touchable area

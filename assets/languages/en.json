@@ -9,5 +9,8 @@
     "password_label": "Password",
     "password_hint": "Enter your password",
     "login_button": "Login",
-    "register_button": "Register"
+    "register_button": "Register",
+    "login_error": "Invalid username or password",
+    "sign_in_with_apple": "Sign in with Apple",
+    "sign_in_with_google": "Sign in with Google"
 }

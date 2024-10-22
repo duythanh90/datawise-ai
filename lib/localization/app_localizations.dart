@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
+import 'package:datawiseai/utils/logger.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
 class AppLocalizations {
-  final Locale locale;
+  Locale locale;
 
   AppLocalizations(this.locale);
 
@@ -26,9 +26,7 @@ class AppLocalizations {
 
       return true;
     } catch (e) {
-      if (kDebugMode) {
-        print('Error loading localization file: $e');
-      }
+      Logger.error('Error loading localization: $e');
       return false;
     }
   }
@@ -39,6 +37,31 @@ class AppLocalizations {
 
   static const LocalizationsDelegate<AppLocalizations> delegate =
       _AppLocalizationsDelegate();
+
+  static String getCurrentLocaleName(BuildContext context) {
+    Locale locale = Localizations.localeOf(context);
+    switch (locale.languageCode) {
+      case 'en':
+        return 'English';
+      case 'es':
+        return 'Español';
+      default:
+        return 'English';
+    }
+  }
+
+  // New function to get current language name
+  static String getCurrentLanguage(BuildContext context) {
+    Locale locale = Localizations.localeOf(context);
+    switch (locale.languageCode) {
+      case 'en':
+        return 'English';
+      case 'es':
+        return 'Español';
+      default:
+        return 'English';
+    }
+  }
 }
 
 class _AppLocalizationsDelegate
