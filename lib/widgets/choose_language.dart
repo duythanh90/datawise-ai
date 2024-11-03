@@ -12,6 +12,8 @@ class ChooseLanguage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var appLocalizations = AppLocalizations.of(context)!;
+
     return InkWell(
       onTap: () {
         showModalBottomSheet(
@@ -29,8 +31,8 @@ class ChooseLanguage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Choose Language',
+                    Text(
+                      appLocalizations.translate('choose_language'),
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -65,7 +67,7 @@ class ChooseLanguage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey),
+          border: Border.all(color: Colors.transparent),
         ),
         child: Row(
           children: [

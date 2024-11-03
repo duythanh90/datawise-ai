@@ -4,6 +4,8 @@
     "increment_button": "Increment",
     "counter_text": "You have pushed the button this many times:",
     "login_title": "Login",
+    "email_label": "Email",
+    "email_hint": "Enter your email",
     "username_label": "Username",
     "username_hint": "Enter your username",
     "password_label": "Password",
@@ -12,5 +14,18 @@
     "register_button": "Register",
     "login_error": "Invalid username or password",
     "sign_in_with_apple": "Sign in with Apple",
-    "sign_in_with_google": "Sign in with Google"
+    "sign_in_with_google": "Sign in with Google",
+    "choose_language": "Choose Language",
+    "or_label": "or",
+    "login_error_empty_fields": "Please fill in all fields",
+    "login_error_user_not_found": "User not found",
+    "login_error_wrong_password": "Wrong password",
+    "login_error_generic": "An error occurred",
+    "create_account_title": "Create Account",
+    "forgot_password_button": "Forgot Password",
+    "create_account_button": "Create Account",
+    "accept_privacy_policy": "I accept the privacy policy",
+    "show_privacy_policy_button": "Show Privacy Policy",
+    "close_button": "Close",
+    "test": ""
 }

@@ -3,17 +3,23 @@ import 'package:flutter/material.dart';
 
 class AppTextField extends StatelessWidget {
   final String hintTextKey;
+  final String text;
   final bool isPassword;
+  final Function(String) onChanged;
 
   const AppTextField({
-    Key? key,
+    super.key,
+    required this.text,
     required this.hintTextKey,
+    required this.onChanged,
     this.isPassword = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: TextEditingController(text: text),
+      onChanged: onChanged,
       obscureText: isPassword,
       style: const TextStyle(
           fontSize: 18, color: Colors.black), // Updated font size to 20

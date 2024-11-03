@@ -20,7 +20,7 @@ class AppTextButton extends StatelessWidget {
     return TextButton(
       onPressed: onPressed,
       style: TextButton.styleFrom(
-        padding: const EdgeInsets.all(12), // Remove padding
+        padding: const EdgeInsets.fromLTRB(40, 12, 40, 12),
         minimumSize: const Size(0, 0), // Remove minimum size constraints
         tapTargetSize:
             MaterialTapTargetSize.shrinkWrap, // Shrink touchable area

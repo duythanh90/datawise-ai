@@ -1,3 +1,5 @@
+import 'package:datawiseai/features/register/register_provider.dart';
+import 'package:datawiseai/features/register/regsiter_screen.dart';
 import 'package:datawiseai/utils/app_constants.dart';
 import 'package:datawiseai/utils/logger.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:datawiseai/features/login/login_screen.dart';
 import 'package:datawiseai/features/home/home_provider.dart';
+import 'package:datawiseai/features/login/login_provider.dart'; // Import the LoginProvider
 import 'package:datawiseai/features/home/home_screen.dart';
 import 'package:datawiseai/localization/app_localizations.dart';
 import 'package:datawiseai/features/intro/intro_screen.dart';
@@ -50,8 +53,12 @@ class _DataWiseAIAppState extends State<DataWiseAIApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => HomeProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => HomeProvider()),
+        ChangeNotifierProvider(create: (_) => LoginProvider()),
+        ChangeNotifierProvider(create: (_) => RegisterProvider()),
+      ],
       child: MaterialApp(
         locale: _locale, // This will be dynamically updated
         supportedLocales: AppConstants.supportedLocales,
@@ -76,12 +83,12 @@ class _DataWiseAIAppState extends State<DataWiseAIApp> {
         },
         initialRoute: '/intro',
         routes: {
-          '/intro': (context) => const IntroScreen(), // Intro screen
+          '/intro': (context) => const IntroScreen(),
           '/login': (context) => LoginScreen(
-                onLanguageSelected:
-                    _changeLanguage, // Pass the change language function
-              ), // Login/Register screen
-          '/home': (context) => const HomeScreen(), // Home screen after login
+                onLanguageSelected: _changeLanguage,
+              ),
+          '/register': (context) => const RegisterScreen(),
+          '/home': (context) => const HomeScreen(),
         },
       ),
     );

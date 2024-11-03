@@ -4,6 +4,8 @@
   "increment_button": "Incrementar",
   "counter_text": "Has presionado el botón esta cantidad de veces:",
   "login_title": "Iniciar sesión",
+  "email_label": "Correo electrónico",
+  "email_hint": "Ingresa tu correo electrónico",
   "username_label": "Nombre de usuario",
   "username_hint": "Ingresa tu nombre de usuario",
   "password_label": "Contraseña",
@@ -12,5 +14,18 @@
   "register_button": "Registrarse",
   "login_error": "Nombre de usuario o contraseña inválidos",
   "sign_in_with_apple": "Iniciar sesión con Apple",
-  "sign_in_with_google": "Iniciar sesión con Google"
+  "sign_in_with_google": "Iniciar sesión con Google",
+  "choose_language": "Elegir idioma",
+  "or_label": "o",
+  "login_error_empty_fields": "Por favor, complete todos los campos",
+  "login_error_user_not_found": "Usuario no encontrado",
+  "login_error_wrong_password": "Contraseña incorrecta",
+  "login_error_generic": "Ocurrió un error",
+  "create_account_title": "Crear cuenta",
+  "forgot_password_button": "¿Olvidaste tu contraseña?",
+  "create_account_button": "Crear cuenta",
+  "accept_privacy_policy": "Acepto la política de privacidad",
+  "show_privacy_policy_button": "Mostrar política de privacidad",
+  "close_button": "Cerrar",
+  "test": ""
 }
