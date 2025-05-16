@@ -1,13 +1,13 @@
+import 'package:datawiseai/features/intro/intro_screen_provider.dart';
 import 'package:datawiseai/features/register/register_provider.dart';
-import 'package:datawiseai/features/register/regsiter_screen.dart';
 import 'package:datawiseai/utils/app_constants.dart';
 import 'package:datawiseai/utils/logger.dart';
+import 'package:datawiseai/utils/storage_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:datawiseai/features/login/login_screen.dart';
 import 'package:datawiseai/features/home/home_provider.dart';
-import 'package:datawiseai/features/login/login_provider.dart'; // Import the LoginProvider
+import 'package:datawiseai/features/login/login_provider.dart';
 import 'package:datawiseai/features/home/home_screen.dart';
 import 'package:datawiseai/localization/app_localizations.dart';
 import 'package:datawiseai/features/intro/intro_screen.dart';
@@ -38,18 +38,12 @@ class DataWiseAIApp extends StatefulWidget {
   const DataWiseAIApp({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _DataWiseAIAppState createState() => _DataWiseAIAppState();
 }
 
 class _DataWiseAIAppState extends State<DataWiseAIApp> {
-  Locale _locale = const Locale('en');
-
-  // Function to change the locale
-  void _changeLanguage(Locale locale) {
-    setState(() {
-      _locale = Locale(locale.languageCode);
-    });
-  }
+  final Locale _locale = const Locale('en');
 
   @override
   Widget build(BuildContext context) {
@@ -58,14 +52,15 @@ class _DataWiseAIAppState extends State<DataWiseAIApp> {
         ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(create: (_) => LoginProvider()),
         ChangeNotifierProvider(create: (_) => RegisterProvider()),
+        ChangeNotifierProvider(create: (_) => IntroScreenProvider()),
       ],
       child: MaterialApp(
-        locale: _locale, // This will be dynamically updated
+        locale: _locale,
         supportedLocales: AppConstants.supportedLocales,
-        title: 'Data Wise AI', //
+        title: 'Data Wise AI',
         theme: ThemeData(
           primarySwatch: Colors.blue,
-          fontFamily: 'Montserrat', // Set Montserrat as the default font
+          fontFamily: 'Montserrat',
         ),
         localizationsDelegates: const [
           AppLocalizations.delegate,
@@ -73,7 +68,6 @@ class _DataWiseAIAppState extends State<DataWiseAIApp> {
           GlobalWidgetsLocalizations.delegate,
         ],
         localeResolutionCallback: (locale, supportedLocales) {
-          // If locale is supported, use it, else fallback to the first one in supportedLocales
           for (var supportedLocale in supportedLocales) {
             if (supportedLocale.languageCode == locale?.languageCode) {
               return supportedLocale;
@@ -81,15 +75,17 @@ class _DataWiseAIAppState extends State<DataWiseAIApp> {
           }
           return supportedLocales.first;
         },
-        initialRoute: '/intro',
-        routes: {
-          '/intro': (context) => const IntroScreen(),
-          '/login': (context) => LoginScreen(
-                onLanguageSelected: _changeLanguage,
-              ),
-          '/register': (context) => const RegisterScreen(),
-          '/home': (context) => const HomeScreen(),
-        },
+        home: FutureBuilder<String?>(
+          future: StorageUtils.getUserToken(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            final hasToken = snapshot.data != null && snapshot.data!.isNotEmpty;
+            return hasToken ? const HomeScreen() : const IntroScreen();
+          },
+        ),
       ),
     );
   }
