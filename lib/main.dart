@@ -62,6 +62,9 @@ class _DataWiseAIAppState extends State<DataWiseAIApp> {
           primarySwatch: Colors.blue,
           fontFamily: 'Montserrat',
         ),
+        routes: {
+          '/home': (context) => const HomeScreen(),
+        },
         localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
