@@ -116,7 +116,7 @@ class _RegisterScreenState extends State<RegisterScreen>
               ),
             ),
             SingleChildScrollView(
-              child: Container(
+              child: SizedBox(
                 height: MediaQuery.of(context).size.height,
                 child: FadeInUp(
                   duration: const Duration(milliseconds: 800),

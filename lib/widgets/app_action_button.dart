@@ -13,12 +13,12 @@ class AppActionButton extends StatelessWidget {
   final double buttonHeight;
 
   const AppActionButton({
-    Key? key,
+    super.key,
     required this.onPressed,
     required this.textKey,
     required this.buttonType,
     this.buttonHeight = 36, // Default button height to 36
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -1,3 +1,4 @@
+import 'package:datawiseai/localization/app_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -101,5 +102,37 @@ class IntroScreenProvider with ChangeNotifier {
       textColor: Colors.white,
       fontSize: 16,
     );
+  }
+
+  void signInWithEmailAsync(
+      String? emailInput, String? passwordInput, BuildContext context) async {
+    var appLocalizations = AppLocalizations.of(context)!;
+    try {
+      // Firebase Auth email and password sign in
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: _email, password: _password);
+      // ignore: use_build_context_synchronously
+      onSignIn(userCredential.user, context);
+    } on FirebaseAuthException catch (e) {
+      Logger.error(e.toString());
+      // Handle different error codes and show appropriate messages
+      String errorMessage;
+      if (e.code == 'user-not-found') {
+        errorMessage = appLocalizations.translate('login_error_user_not_found');
+      } else if (e.code == 'wrong-password') {
+        errorMessage = appLocalizations.translate('login_error_wrong_password');
+      } else {
+        errorMessage = appLocalizations.translate('login_error_generic');
+      }
+
+      Fluttertoast.showToast(
+          msg: errorMessage,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 1,
+          backgroundColor: AppColors.toastErrorColor,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
   }
 }

@@ -77,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen>
               ),
             ),
             SingleChildScrollView(
-              child: Container(
+              child: SizedBox(
                 height: MediaQuery.of(context)
                     .size
                     .height, // Ensure it fills the full screen

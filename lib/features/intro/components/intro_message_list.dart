@@ -10,6 +10,8 @@ import 'google_login_button.dart';
 import 'apple_login_button.dart';
 import 'intro_message_types.dart';
 
+const String TYPE_EMAIL_CONFIRM = 'TYPE_EMAIL_CONFIRM';
+
 class IntroMessageList extends StatefulWidget {
   const IntroMessageList({super.key});
 
@@ -52,13 +54,22 @@ class _IntroMessageListState extends State<IntroMessageList> {
       'text': 'Tell me your name, and I’ll remember it for our chats.',
       'title': 'Enter your name',
       'type': TYPE_INPUT,
+      'field': 'name',
     },
   ];
 
-  final TextEditingController _nameController = TextEditingController();
   int _visibleMessageCount = 0;
   bool _isLoading = false;
   bool _nameSubmitted = false;
+  bool _emailSubmitted = false;
+  bool _passwordSubmitted = false;
+
+  String? _emailInput;
+  String? _passwordInput;
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void initState() {
@@ -97,10 +108,13 @@ class _IntroMessageListState extends State<IntroMessageList> {
                     }
                     final message = _introMessages[index];
                     if (message['type'] == TYPE_INPUT) {
-                      return _buildInputField(message);
+                      return _buildInputField(message, loginProvider);
                     }
                     if (message['type'] == TYPE_BUTTONS) {
-                      return _buildLoginButtons(context, IntroScreenProvider());
+                      return _buildLoginButtons(context, loginProvider);
+                    }
+                    if (message['type'] == TYPE_EMAIL_CONFIRM) {
+                      return _buildEmailConfirm(message);
                     }
                     return _buildTextBubble(message, index);
                   },
@@ -126,83 +140,212 @@ class _IntroMessageListState extends State<IntroMessageList> {
         ),
       );
 
-  Widget _buildInputField(Map<String, String> message) => Align(
-        alignment: Alignment.centerLeft,
-        child: AnimatedOpacity(
-          opacity: 1.0,
-          duration: const Duration(milliseconds: 300),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, bottom: 4.0),
-                child: Text(
-                  message['title'] ?? '',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade600,
-                    fontWeight: FontWeight.bold,
-                  ),
+  Widget _buildInputField(
+      Map<String, String> message, IntroScreenProvider loginProvider) {
+    // Choose controller based on field
+    TextEditingController controller;
+    String field = message['field'] ?? '';
+    if (field == 'name') {
+      controller = _nameController;
+    } else if (field == 'email') {
+      controller = _emailController;
+    } else if (field == 'password') {
+      controller = _passwordController;
+    } else {
+      controller = TextEditingController(); // fallback
+    }
+
+    // Show condition by field
+    bool showInput = (field == 'name' && !_nameSubmitted) ||
+        (field == 'email' && !_emailSubmitted) ||
+        (field == 'password' && !_passwordSubmitted);
+
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: AnimatedOpacity(
+        opacity: 1.0,
+        duration: const Duration(milliseconds: 300),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0, bottom: 4.0),
+              child: Text(
+                message['title'] ?? '',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey.shade600,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              if (!_nameSubmitted)
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 10),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 6,
-                        offset: Offset(2, 2),
-                      ),
-                    ],
-                  ),
-                  child: TextField(
-                    controller: _nameController,
-                    maxLength: 30,
-                    maxLines: 1,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      counterText: '',
-                      hintText: 'Type your name...',
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.send, color: Colors.blue),
-                        onPressed: () async {
-                          if (_nameController.text.trim().isNotEmpty) {
-                            final name = _nameController.text.trim();
-                            await StorageUtils.saveUserName(name);
+            ),
+            if (showInput)
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 6,
+                      offset: Offset(2, 2),
+                    ),
+                  ],
+                ),
+                child: TextField(
+                  controller: controller,
+                  maxLength: 30,
+                  maxLines: 1,
+                  obscureText: field == 'password',
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    counterText: '',
+                    hintText: field == 'email'
+                        ? 'Type your email...'
+                        : field == 'password'
+                            ? 'Type your password...'
+                            : 'Type your name...',
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.send, color: Colors.blue),
+                      onPressed: () async {
+                        final input = controller.text.trim();
+                        if (input.isEmpty) return;
+
+                        if (field == 'name') {
+                          await StorageUtils.saveUserName(input);
+                          setState(() {
+                            _nameSubmitted = true;
+                            _introMessages.add({
+                              'sender': SENDER_AI,
+                              'text': 'Welcome, $input!',
+                              'type': TYPE_TEXT,
+                            });
+                            _introMessages.add({
+                              'sender': SENDER_AI,
+                              'text': 'Now please log in to continue. 😊',
+                              'type': TYPE_TEXT,
+                            });
+                            _introMessages.add({
+                              'sender': SENDER_AI,
+                              'type': TYPE_BUTTONS,
+                            });
+                          });
+                          controller.clear();
+                          _showMessages();
+                        } else if (field == 'email') {
+                          final emailRegex = RegExp(
+                              r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
+                          if (!emailRegex.hasMatch(input)) {
                             setState(() {
-                              _nameSubmitted = true;
+                              _emailSubmitted = false;
+                              _introMessages.removeWhere((msg) =>
+                                  msg['type'] == TYPE_INPUT &&
+                                  msg['field'] == 'email');
                               _introMessages.add({
                                 'sender': SENDER_AI,
-                                'text': 'Welcome, $name!',
+                                'text':
+                                    "That email doesn't look correct. Please try again.",
                                 'type': TYPE_TEXT,
                               });
                               _introMessages.add({
-                                'sender': SENDER_AI,
-                                'text': 'Now please log in to continue. 😊',
-                                'type': TYPE_TEXT,
-                              });
-                              _introMessages.add({
-                                'sender': SENDER_AI,
-                                'type': TYPE_BUTTONS,
+                                'sender': SENDER_HUMAN,
+                                'title': 'Enter your email',
+                                'type': TYPE_INPUT,
+                                'field': 'email',
                               });
                             });
+                            controller.clear();
                             _showMessages();
+                            return;
                           }
-                        },
-                      ),
+                          _emailInput = input;
+                          _emailSubmitted = true;
+                          setState(() {
+                            _introMessages.removeWhere((msg) =>
+                                msg['type'] == TYPE_INPUT &&
+                                msg['field'] == 'email');
+                            _introMessages.add({
+                              'sender': SENDER_AI,
+                              'text': _emailInput!,
+                              'type': TYPE_EMAIL_CONFIRM,
+                            });
+                          });
+                          controller.clear();
+                          _showMessages();
+                        } else if (field == 'password') {
+                          _passwordInput = input;
+                          if (_emailInput != null) {
+                            loginProvider.signInWithEmailAsync(
+                              _emailInput!,
+                              _passwordInput!,
+                              context,
+                            );
+                          }
+                          setState(() {
+                            _passwordSubmitted = true;
+                          });
+                          controller.clear();
+                          _showMessages();
+                        }
+                      },
                     ),
                   ),
                 ),
-            ],
-          ),
+              ),
+          ],
         ),
-      );
+      ),
+    );
+  }
+
+  Widget _buildEmailConfirm(Map<String, String> message) {
+    final email = message['text'] ?? '';
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 6,
+              offset: Offset(2, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Your email is $email',
+              style: const TextStyle(fontSize: 16),
+            ),
+            IconButton(
+              icon: const Icon(Icons.edit, color: Colors.blue),
+              onPressed: () {
+                setState(() {
+                  _emailSubmitted = false;
+                  _introMessages.add({
+                    'sender': SENDER_HUMAN,
+                    'title': 'Enter your email',
+                    'type': TYPE_INPUT,
+                    'field': 'email',
+                  });
+                });
+                _showMessages();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget _buildLoginButtons(
       BuildContext context, IntroScreenProvider loginProvider) {
@@ -229,7 +372,15 @@ class _IntroMessageListState extends State<IntroMessageList> {
           const SizedBox(height: 8),
           EmailLoginButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/login');
+              setState(() {
+                _introMessages.add({
+                  'sender': SENDER_HUMAN,
+                  'title': 'Enter your email',
+                  'type': TYPE_INPUT,
+                  'field': 'email',
+                });
+              });
+              _showMessages();
             },
           ),
         ],
@@ -238,8 +389,113 @@ class _IntroMessageListState extends State<IntroMessageList> {
   }
 
   Widget _buildTextBubble(Map<String, String> message, int index) {
+    const String typeEmailConfirm = 'TYPE_EMAIL_CONFIRM';
     final isLast = index == _introMessages.length - 1;
     final isFirst = index == 0;
+
+    if (message['type'] == typeEmailConfirm) {
+      return Align(
+        alignment: Alignment.centerLeft,
+        child: AnimatedOpacity(
+          opacity: 1.0,
+          duration: const Duration(milliseconds: 300),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 6,
+                      offset: Offset(2, 2),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  "Your email is ${message['text']}",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        _emailSubmitted = false;
+                        _introMessages.removeWhere((msg) =>
+                            msg['type'] == TYPE_INPUT &&
+                            msg['field'] == 'email');
+                        _introMessages.add({
+                          'sender': SENDER_HUMAN,
+                          'title': 'Enter your email',
+                          'type': TYPE_INPUT,
+                          'field': 'email',
+                        });
+                      });
+                      _showMessages();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      backgroundColor: Colors.grey.shade200,
+                      foregroundColor: Colors.black87,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    icon: const Icon(Icons.edit, size: 18),
+                    label: const Text('Edit Email',
+                        style: TextStyle(fontSize: 14)),
+                  ),
+                  const SizedBox(width: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _passwordSubmitted = false;
+                        _introMessages.removeWhere((msg) =>
+                            msg['type'] == TYPE_INPUT &&
+                            msg['field'] == 'password');
+                        _introMessages.add({
+                          'sender': SENDER_HUMAN,
+                          'title': 'Enter your password',
+                          'type': TYPE_INPUT,
+                          'field': 'password',
+                        });
+                      });
+                      _showMessages();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      backgroundColor: Colors.blue.shade600,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 18, vertical: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child:
+                        const Text('Continue', style: TextStyle(fontSize: 14)),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Align(
       alignment: Alignment.centerLeft,
       child: AnimatedOpacity(
