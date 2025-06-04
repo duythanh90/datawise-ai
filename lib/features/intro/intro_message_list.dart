@@ -1,14 +1,15 @@
 import 'dart:math';
 import 'dart:io';
 import 'package:datawiseai/features/intro/components/email_login_button.dart';
+import 'package:datawiseai/widgets/gradient_text.dart';
 
-import '../intro_screen_provider.dart';
+import 'intro_screen_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../utils/storage_utils.dart';
-import 'google_login_button.dart';
-import 'apple_login_button.dart';
-import 'intro_message_types.dart';
+import '../../utils/storage_utils.dart';
+import 'components/google_login_button.dart';
+import 'components/apple_login_button.dart';
+import 'components/intro_message_types.dart';
 
 const String TYPE_EMAIL_CONFIRM = 'TYPE_EMAIL_CONFIRM';
 
@@ -136,7 +137,11 @@ class _IntroMessageListState extends State<IntroMessageList> {
             color: Colors.grey.shade300,
             borderRadius: BorderRadius.circular(16),
           ),
-          child: const Text('Typing...'),
+          child: const GradientText("Typing...",
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.black54,
+              )),
         ),
       );
 
@@ -170,11 +175,18 @@ class _IntroMessageListState extends State<IntroMessageList> {
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 8.0, bottom: 4.0),
-              child: Text(
+              // child: Text(
+              //   message['title'] ?? '',
+              //   style: TextStyle(
+              //     fontSize: 12,
+              //     color: Colors.grey.shade600,
+              //     fontWeight: FontWeight.bold,
+              //   ),
+              // ),
+              child: GradientText(
                 message['title'] ?? '',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
-                  color: Colors.grey.shade600,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -369,20 +381,20 @@ class _IntroMessageListState extends State<IntroMessageList> {
               if (user != null) loginProvider.onSignIn(user, context);
             },
           ),
-          const SizedBox(height: 8),
-          EmailLoginButton(
-            onPressed: () {
-              setState(() {
-                _introMessages.add({
-                  'sender': SENDER_HUMAN,
-                  'title': 'Enter your email',
-                  'type': TYPE_INPUT,
-                  'field': 'email',
-                });
-              });
-              _showMessages();
-            },
-          ),
+          // const SizedBox(height: 8),
+          // EmailLoginButton(
+          //   onPressed: () {
+          //     setState(() {
+          //       _introMessages.add({
+          //         'sender': SENDER_HUMAN,
+          //         'title': 'Enter your email',
+          //         'type': TYPE_INPUT,
+          //         'field': 'email',
+          //       });
+          //     });
+          //     _showMessages();
+          //   },
+          // ),
         ],
       ),
     );
@@ -507,11 +519,10 @@ class _IntroMessageListState extends State<IntroMessageList> {
             if (isFirst)
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, bottom: 4.0),
-                child: Text(
-                  'AI',
-                  style: TextStyle(
+                child: GradientText(
+                  'Chat With PDF',
+                  style: const TextStyle(
                     fontSize: 12,
-                    color: Colors.grey.shade600,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

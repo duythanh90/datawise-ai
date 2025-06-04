@@ -51,6 +51,10 @@ class IntroScreenProvider with ChangeNotifier {
 
       final userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
+
+      // ✅ Navigate to dashboard
+      // ignore: use_build_context_synchronously
+      onSignIn(userCredential.user, context);
       return userCredential.user;
     } catch (e) {
       Logger.error("Google Sign-In error: $e");
@@ -76,6 +80,9 @@ class IntroScreenProvider with ChangeNotifier {
 
       final userCredential =
           await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+
+      // ✅ Navigate to dashboard
+      onSignIn(userCredential.user, context);
       return userCredential.user;
     } catch (e) {
       Logger.error("Apple Sign-In error: $e");

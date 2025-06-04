@@ -116,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen>
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            appLocalizations.translate('email_label'),
+                            appLocalizations.translate(' _label'),
                             style: const TextStyle(
                                 fontSize: 18, color: Colors.black),
                           ),

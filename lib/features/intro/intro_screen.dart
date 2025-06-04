@@ -1,4 +1,4 @@
-import 'package:datawiseai/features/intro/components/intro_message_list.dart';
+import 'package:datawiseai/features/intro/intro_message_list.dart';
 import 'package:flutter/material.dart';
 
 class IntroScreen extends StatelessWidget {
