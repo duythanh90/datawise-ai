@@ -27,5 +27,9 @@
     "accept_privacy_policy": "I accept the privacy policy",
     "show_privacy_policy_button": "Show Privacy Policy",
     "close_button": "Close",
+    "tab_explore": "Explore",
+    "tab_create": "Create",
+    "tab_insights": "Insights",
+    "tab_profile": "Profile",
     "test": ""
 }

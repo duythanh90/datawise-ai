@@ -1,6 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageUtils {
+  // Keys
   static const String userNameKey = 'user_name';
   static const String userEmailKey = 'user_email';
   static const String userPhoneKey = 'user_phone';
@@ -9,7 +10,8 @@ class StorageUtils {
   static const String userProfilePicKey = 'user_profile_pic';
   static const String userLanguageKey = 'user_language';
 
-  static Future<void> saveUserName(String name) async {
+  // User name
+  static Future<void> setUserName(String name) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(userNameKey, name);
   }
@@ -19,7 +21,8 @@ class StorageUtils {
     return prefs.getString(userNameKey);
   }
 
-  static Future<void> saveUserEmail(String email) async {
+  // User email
+  static Future<void> setUserEmail(String email) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(userEmailKey, email);
   }
@@ -29,7 +32,8 @@ class StorageUtils {
     return prefs.getString(userEmailKey);
   }
 
-  static Future<void> saveUserPhone(String phone) async {
+  // User phone
+  static Future<void> setUserPhone(String phone) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(userPhoneKey, phone);
   }
@@ -39,7 +43,8 @@ class StorageUtils {
     return prefs.getString(userPhoneKey);
   }
 
-  static Future<void> saveUserId(String userId) async {
+  // User ID
+  static Future<void> setUserId(String userId) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(userIdKey, userId);
   }
@@ -49,7 +54,8 @@ class StorageUtils {
     return prefs.getString(userIdKey);
   }
 
-  static Future<void> saveUserToken(String token) async {
+  // User token
+  static Future<void> setUserToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(userTokenKey, token);
   }
@@ -59,7 +65,8 @@ class StorageUtils {
     return prefs.getString(userTokenKey);
   }
 
-  static Future<void> saveUserProfilePic(String url) async {
+  // User profile picture
+  static Future<void> setUserProfilePic(String url) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(userProfilePicKey, url);
   }
@@ -69,7 +76,8 @@ class StorageUtils {
     return prefs.getString(userProfilePicKey);
   }
 
-  static Future<void> saveUserLanguage(String lang) async {
+  // User language
+  static Future<void> setUserLanguage(String lang) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(userLanguageKey, lang);
   }
@@ -79,6 +87,7 @@ class StorageUtils {
     return prefs.getString(userLanguageKey);
   }
 
+  // Clear all stored user data
   static Future<void> clearAll() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(userNameKey);

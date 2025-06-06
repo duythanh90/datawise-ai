@@ -186,7 +186,7 @@ class _IntroMessageListState extends State<IntroMessageList> {
               child: GradientText(
                 message['title'] ?? '',
                 style: const TextStyle(
-                  fontSize: 12,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -227,7 +227,7 @@ class _IntroMessageListState extends State<IntroMessageList> {
                         if (input.isEmpty) return;
 
                         if (field == 'name') {
-                          await StorageUtils.saveUserName(input);
+                          await StorageUtils.setUserName(input);
                           setState(() {
                             _nameSubmitted = true;
                             _introMessages.add({
@@ -289,17 +289,15 @@ class _IntroMessageListState extends State<IntroMessageList> {
                           _showMessages();
                         } else if (field == 'password') {
                           _passwordInput = input;
-                          if (_emailInput != null) {
-                            loginProvider.signInWithEmailAsync(
-                              _emailInput!,
-                              _passwordInput!,
-                              context,
-                            );
-                          }
+                          loginProvider.setEmail(_emailInput ?? '');
+                          loginProvider.setPassword(_passwordInput ?? '');
+
                           setState(() {
                             _passwordSubmitted = true;
                           });
+
                           controller.clear();
+                          await loginProvider.signInWithEmailAsync(context);
                           _showMessages();
                         }
                       },
@@ -520,9 +518,9 @@ class _IntroMessageListState extends State<IntroMessageList> {
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, bottom: 4.0),
                 child: GradientText(
-                  'Chat With PDF',
+                  'Datawise AI',
                   style: const TextStyle(
-                    fontSize: 12,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
