@@ -2,7 +2,7 @@ import 'package:datawiseai/features/home/tabs/create/create_tab.dart';
 import 'package:datawiseai/features/home/tabs/explore/explore_tab.dart';
 import 'package:datawiseai/features/home/tabs/insights/insights_tab.dart';
 import 'package:datawiseai/features/home/tabs/profile/profile_tab.dart';
-import 'package:datawiseai/features/home/components/custom_bottom_nav.dart';
+import 'package:datawiseai/features/home/widgets/custom_bottom_nav.dart';
 import 'package:flutter/material.dart';
 import '../../localization/app_localizations.dart';
 
