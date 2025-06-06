@@ -2,6 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:datawiseai/widgets/gradient_text.dart';
+import 'package:provider/provider.dart';
+import 'package:datawiseai/features/home/notifications/notifications_provider.dart';
 
 typedef OnTabSelected = void Function(int index);
 
@@ -36,13 +38,13 @@ class _CustomBottomNavState extends State<CustomBottomNav>
     );
 
     _offsetAnimation = Tween<Offset>(
-      begin: const Offset(0, 2), // Slide from far below
+      begin: const Offset(0, 2),
       end: Offset.zero,
     ).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
     );
 
-    _animationController.forward(); // Trigger on first build
+    _animationController.forward();
   }
 
   @override
@@ -53,6 +55,9 @@ class _CustomBottomNavState extends State<CustomBottomNav>
 
   @override
   Widget build(BuildContext context) {
+    final hasUnread =
+        context.watch<NotificationsProvider?>()?.hasUnread ?? false;
+
     return SafeArea(
       top: false,
       bottom: true,
@@ -84,6 +89,8 @@ class _CustomBottomNavState extends State<CustomBottomNav>
                     final isSelected = widget.selectedIndex == index;
                     final icon = widget.tabItems[index]['icon'] as IconData;
                     final label = widget.tabItems[index]['label'] as String;
+                    final isNotificationTab =
+                        label.toLowerCase().contains('notification');
 
                     return GestureDetector(
                       onTap: () {
@@ -92,46 +99,92 @@ class _CustomBottomNavState extends State<CustomBottomNav>
                           widget.onTabSelected(index);
                         }
                       },
-                      child: AnimatedContainer(
+                      child: AnimatedScale(
+                        scale: isSelected ? 1.1 : 1.0,
                         duration: const Duration(milliseconds: 200),
-                        curve: Curves.easeInOut,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? Colors.white.withOpacity(0.08)
-                              : Colors.transparent,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              icon,
-                              color: isSelected ? Colors.white : Colors.grey,
-                            ),
-                            const SizedBox(height: 4),
-                            AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 250),
-                              child: isSelected
-                                  ? GradientText(
-                                      label,
-                                      key: ValueKey(label),
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    )
-                                  : Text(
-                                      label,
-                                      key: ValueKey('$label-unselected'),
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey,
+                        curve: Curves.easeOutBack,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeInOut,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 6),
+                          constraints: BoxConstraints(
+                            minWidth: MediaQuery.of(context).size.width * 0.18,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? Colors.white.withOpacity(0.08)
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Stack(
+                                children: [
+                                  Icon(
+                                    icon,
+                                    color:
+                                        isSelected ? Colors.white : Colors.grey,
+                                  ),
+                                  if (isNotificationTab && hasUnread)
+                                    Positioned(
+                                      right: 0,
+                                      top: 0,
+                                      child: TweenAnimationBuilder<double>(
+                                        tween: Tween(begin: 1.0, end: 1.4),
+                                        duration:
+                                            const Duration(milliseconds: 1000),
+                                        curve: Curves.easeInOut,
+                                        builder: (context, scale, child) {
+                                          return Transform.scale(
+                                            scale: scale,
+                                            child: Container(
+                                              width: 8,
+                                              height: 8,
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    Colors.red.withOpacity(0.9),
+                                                shape: BoxShape.circle,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.red
+                                                        .withOpacity(0.6),
+                                                    blurRadius: 6,
+                                                    spreadRadius: 1,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
                                       ),
                                     ),
-                            ),
-                          ],
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 250),
+                                child: isSelected
+                                    ? GradientText(
+                                        label,
+                                        key: ValueKey(label),
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )
+                                    : Text(
+                                        label,
+                                        key: ValueKey('$label-unselected'),
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );

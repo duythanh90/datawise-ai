@@ -1,3 +1,4 @@
+import 'package:datawiseai/features/home/notifications/notifications_provider.dart';
 import 'package:datawiseai/features/intro/intro_screen_provider.dart';
 import 'package:datawiseai/features/register/register_provider.dart';
 import 'package:datawiseai/utils/app_constants.dart';
@@ -53,6 +54,7 @@ class _DataWiseAIAppState extends State<DataWiseAIApp> {
         ChangeNotifierProvider(create: (_) => LoginProvider()),
         ChangeNotifierProvider(create: (_) => RegisterProvider()),
         ChangeNotifierProvider(create: (_) => IntroScreenProvider()),
+        ChangeNotifierProvider(create: (_) => NotificationsProvider()),
       ],
       child: MaterialApp(
         locale: _locale,
