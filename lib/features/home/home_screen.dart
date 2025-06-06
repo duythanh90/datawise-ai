@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var appLocalizations = AppLocalizations.of(context)!;
+    final appLocalizations = AppLocalizations.of(context)!;
 
     final tabItems = [
       {
@@ -53,20 +53,26 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
 
     return Scaffold(
-      body: Stack(
-        children: [
-          _pages[_selectedIndex],
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: CustomBottomNav(
-              selectedIndex: _selectedIndex,
-              tabItems: tabItems,
-              onTabSelected: _onItemTapped,
-            ),
+      // 🔥 Remove white background to let dark/tab content show behind
+      backgroundColor: Colors.transparent,
+      body: SafeArea(
+        top: true,
+        bottom: false, // Prevents double padding with floating nav
+        child: Container(
+          color: const Color(0xFF121212), // Matches bottom nav vibe
+          child: Column(
+            children: [
+              Expanded(
+                child: _pages[_selectedIndex],
+              ),
+              CustomBottomNav(
+                selectedIndex: _selectedIndex,
+                tabItems: tabItems,
+                onTabSelected: _onItemTapped,
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
