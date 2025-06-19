@@ -1,0 +1,2 @@
+/Users/thanhnd/Documents/NDTSoft/datawise-ai/android/app/.cxx/Debug/l12u12y5/x86/CMakeFiles/edit_cache.dir
+/Users/thanhnd/Documents/NDTSoft/datawise-ai/android/app/.cxx/Debug/l12u12y5/x86/CMakeFiles/rebuild_cache.dir
