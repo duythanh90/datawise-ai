@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'dart:io';
-import 'package:datawiseai/features/intro/components/email_login_button.dart';
 import 'package:datawiseai/widgets/gradient_text.dart';
 
 import 'intro_screen_provider.dart';
@@ -96,7 +95,7 @@ class _IntroMessageListState extends State<IntroMessageList> {
     return Consumer<IntroScreenProvider>(
       builder: (context, loginProvider, _) {
         return Container(
-          color: Colors.grey.shade100,
+          color: const Color(0xFF121212),
           child: Column(
             children: [
               Expanded(
@@ -134,14 +133,11 @@ class _IntroMessageListState extends State<IntroMessageList> {
           margin: const EdgeInsets.symmetric(vertical: 10),
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
           decoration: BoxDecoration(
-            color: Colors.grey.shade300,
+            color: Colors.black54,
             borderRadius: BorderRadius.circular(16),
           ),
           child: const GradientText("Typing...",
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.black54,
-              )),
+              style: TextStyle(fontSize: 16, color: Colors.grey)),
         ),
       );
 
@@ -197,11 +193,12 @@ class _IntroMessageListState extends State<IntroMessageList> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: const Color(
+                      0xFF1E1E1E), // slightly lighter than main bg for contrast
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black12,
+                      color: Colors.black45,
                       blurRadius: 6,
                       offset: Offset(2, 2),
                     ),
@@ -212,6 +209,8 @@ class _IntroMessageListState extends State<IntroMessageList> {
                   maxLength: 30,
                   maxLines: 1,
                   obscureText: field == 'password',
+                  style: const TextStyle(
+                      color: Colors.white), // text color for dark mode
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     counterText: '',
@@ -220,6 +219,8 @@ class _IntroMessageListState extends State<IntroMessageList> {
                         : field == 'password'
                             ? 'Type your password...'
                             : 'Type your name...',
+                    hintStyle: const TextStyle(
+                        color: Colors.white70), // hint color for dark
                     suffixIcon: IconButton(
                       icon: const Icon(Icons.send, color: Colors.blue),
                       onPressed: () async {
@@ -304,7 +305,7 @@ class _IntroMessageListState extends State<IntroMessageList> {
                     ),
                   ),
                 ),
-              ),
+              )
           ],
         ),
       ),
@@ -417,11 +418,12 @@ class _IntroMessageListState extends State<IntroMessageList> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: const Color(
+                      0xFF1E1E1E), // same as input Container for dark mode
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black12,
+                      color: Colors.black45,
                       blurRadius: 6,
                       offset: Offset(2, 2),
                     ),
@@ -431,7 +433,7 @@ class _IntroMessageListState extends State<IntroMessageList> {
                   "Your email is ${message['text']}",
                   style: const TextStyle(
                     fontSize: 16,
-                    color: Colors.black,
+                    color: Colors.white, // white text for dark bubble
                   ),
                 ),
               ),
@@ -456,15 +458,17 @@ class _IntroMessageListState extends State<IntroMessageList> {
                     },
                     style: ElevatedButton.styleFrom(
                       elevation: 0,
-                      backgroundColor: Colors.grey.shade200,
-                      foregroundColor: Colors.black87,
+                      backgroundColor: const Color(
+                          0xFF2C2C2C), // darker neutral for dark mode
+                      foregroundColor: Colors.white70, // lighter text
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 8),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    icon: const Icon(Icons.edit, size: 18),
+                    icon:
+                        const Icon(Icons.edit, size: 18, color: Colors.white70),
                     label: const Text('Edit Email',
                         style: TextStyle(fontSize: 14)),
                   ),
@@ -529,11 +533,14 @@ class _IntroMessageListState extends State<IntroMessageList> {
               margin: const EdgeInsets.symmetric(vertical: 10),
               padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
               decoration: BoxDecoration(
-                color: isLast ? Colors.blue : Colors.white,
+                color: isLast
+                    ? Colors.blue
+                    : const Color(
+                        0xFF1E1E1E), // dark bubble for normal, blue for last
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black12,
+                    color: Colors.black45, // deeper shadow for dark theme
                     blurRadius: 6,
                     offset: Offset(2, 2),
                   ),
@@ -544,7 +551,7 @@ class _IntroMessageListState extends State<IntroMessageList> {
                 style: TextStyle(
                   fontSize: isLast ? 18 : 16,
                   fontWeight: isLast ? FontWeight.bold : FontWeight.normal,
-                  color: isLast ? Colors.white : Colors.black,
+                  color: Colors.white, // always white text in dark mode
                 ),
               ),
             ),

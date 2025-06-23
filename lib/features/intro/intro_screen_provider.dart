@@ -5,7 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:datawiseai/utils/logger.dart';
-import 'package:datawiseai/utils/app_colors.dart';
+// import 'package:datawiseai/utils/app_colors.dart';
 import 'package:datawiseai/utils/storage_utils.dart';
 
 class IntroScreenProvider with ChangeNotifier {
@@ -128,7 +128,7 @@ class IntroScreenProvider with ChangeNotifier {
       msg: msg,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.TOP,
-      backgroundColor: AppColors.toastErrorColor,
+      // backgroundColor: AppColors.toastErrorColor,
       textColor: Colors.white,
       fontSize: 16,
     );

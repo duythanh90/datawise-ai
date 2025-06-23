@@ -6,8 +6,19 @@ class IntroScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: SafeArea(
+    return Scaffold(
+      backgroundColor: const Color(0xFF121212), // Dark background
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF121212), // Same dark color
+        elevation: 0,
+        title: const Text(
+          'Datawise AI',
+          style: TextStyle(color: Colors.white),
+        ),
+        iconTheme: const IconThemeData(
+            color: Colors.white), // back button color if any
+      ),
+      body: const SafeArea(
         child: IntroMessageList(),
       ),
     );
